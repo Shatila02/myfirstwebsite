@@ -1,0 +1,27 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+<div class="box-element wishdata">
+    {% csrf_token %}
+    {% for item in wishlist %}
+    <div class="col-md-12">
+        <div class="cart-row">
+            <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
+            <div style="flex:2;padding-right:90px;"><p>{{item.product.product_name}}</p></div>
+			<div style="color:white;padding-right:90px;"><p><strike style="color:red;">${{item.product.max_price}}$</strike></p></div>
+            <div style="flex:1;padding-right:90px;"><p>${{item.product.discount_price|floatformat:2}}</p></div>
+            <input type="hidden" value="{{item.product.id}}">
+            <div class="col=md-4 my auto">
+                <a class="btn btn-outline-success" href="{% url 'product_details' item.product.pk %}"><i class="fa fa-eye"></i> View</a>
+            </div>
+            <div class="col=md-2 my auto">
+                <button style="width:140px;height:38px;font-size:14px;" data-product="{{item.product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart"><i class='fa fa-shopping-cart yellow-color'></i>  Add to Cart</button>
+            </div>
+            <div class="col=md-2 my auto">
+                <button style="width:120px;height:38px;font-size:14px;" data-product="{{item.product.id}}" data-action="delete" class="btn btn-danger delete-wishlist-item"><i class="fa fa-trash"></i> Remove</button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

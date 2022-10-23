@@ -1,0 +1,35 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+<div class="row">
+	<h3>Product Details</h3>
+	<div class="container py-5 data_product"></div>
+		<div class="col-lg-4" style="float:left;">
+			<img class="thumbnail" src="{{product.imageURL}}">
+			<!--<h6><strong>{{product.product_name}}</strong></h6>
+			<h4 style="display: inline-block;"><strong>${{product.discount_price}}</strong></h4>
+			<br>-->
+			<button style="width:375px" data-product="{{product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart"><i class='fa fa-shopping-cart yellow-color'></i> Add to Cart</button>
+			<br>
+			{% if user.is_authenticated and user.is_customer %}
+			<button style="width:375px" class="btn btn-outline-secondary add-btn add-wishlist" data-product="{{product.id}}" data-action="add"><i class="fa fa-heart"></i> Add to Wishlist</button>
+			{% endif %}
+		</div>
+		<div class="col-lg-4">
+			<input type="hidden" value="{{product.id}}" class="prod_id">
+			<h2 style="margin-top:10px;"><strong>{{product.product_name}}</strong></h2>
+			<h7 style="color:white;">Brand: <strong>{{product.brand}}</strong></h7>
+			<br>
+			<h7 style="color:white;">In Stock: <strong>{{product.in_stock_total}}</strong></h7>
+			<br>
+			<h7 style="color:white;"> Price: <strong><strike style="color:red;">{{product.max_price}}$</strike></strong></h7>
+			<h7 style="color:lightgreen;"><strong>{{product.discount_price}}$</strong></h7>
+			<br>
+			<br>
+			<h7 style="color:white;">About Product: <p style="text-align:justify;">{{product.product_description}}</p></h7>
+			<br>
+			<h7 style="color:white;">Details: <p style="text-align:justify;">{{product.product_long_description}}</p></h7>
+		</div>
+	</div>
+</div>
+{% endblock content %}

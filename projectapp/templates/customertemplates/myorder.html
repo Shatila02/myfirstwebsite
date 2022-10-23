@@ -1,0 +1,42 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h4>Payment Details</h4>
+            <th><h6 style="padding-right:130px;">Order ID:  {{order.transaction_id}}</h6></th>
+            <th><h6 style="padding-right:130px;">Order Status: {{order.status}}</h6></th>
+            <hr>
+            <hr>
+            <h4>Shipping Details</h4>
+            <hr>
+            <h6><i>First Name:</i> {{order.customer.first_name}}</h6>
+            <h6><i>Last Name:</i> {{order.customer.last_name}}</h6>
+            <h6><i>Email:</i> {{order.customer.email}}</h6>
+            <h6><i>Phone Number:</i> {{order.customer.phone_number}}</h6>
+            <h6><i>Address:</i> {{order.customer.address}}</h6>
+        </div>
+        <div class="col-md-6">
+            <h4>Order Details</h4>
+            <h5>Grand Total: {{order.get_cart_total}}$</h5>
+            <div class="cart-row">
+                <th><h6 style="padding-right:130px;">Image</h6></th>
+                <th><h6 style="padding-right:120px;">Name</h6></th>
+                <th><h6 style="padding-right:110px;">Price</h6></th>
+                <th><h6 style="padding-right:100px;">quantity</h6></th>
+            </div>
+            {% for item in orderitem %}
+				<div class="cart-row">
+					<td><img class="row-image" src="{{item.product.imageURL}}"></td>
+					<td><p style="padding-left:80px;padding-right:120px;color:white">{{item.product.product_name}}</p></td>
+					<td><p style="padding-right:110px;color:white">${{item.product.discount_price|floatformat:2}}</p></td>
+					<td>
+						<p class="quantity" style="padding-right:100px;color:white">{{item.quantity}}</p>
+                    </td>
+                </div>
+            {% endfor %}
+        </div>            
+    </div>
+</div>
+{% endblock %}

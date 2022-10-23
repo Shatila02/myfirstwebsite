@@ -1,0 +1,211 @@
+{% extends 'merchanttemplates/base_template.html' %}
+{% block title %}
+Product Create
+{% endblock title %}
+
+
+{% block custom_css %}
+<link rel="stylesheet" href="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.css"/>
+<style>
+.bootstrap-tagsinput{
+width:100%;
+}
+</style>
+{% endblock custom_css %}
+
+{% block page_title %}
+Product Create
+{% endblock page_title %}
+
+{% block page_content %}
+<div class="row">
+    <div class="col-lg-12">
+            <div class="card">
+                <form id="myform">
+                {% csrf_token %}
+                <div class="card-body">
+                    <h5>Product Basic Details</h5>
+                    <hr>
+                    <div class="row"> 
+                        <div class="col-lg-6">
+                            <label>Product Name</label>
+                            <input class="form-control" name="product_name" placeholder="Product Name" id="title" />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Brand</label>
+                            <input class="form-control" name="brand" placeholder="Brand" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row"> 
+                        <div class="col-lg-6">
+                            <label>Url Slug</label>
+                            <input class="form-control" name="url_slug" placeholder="Url Slug" id="url_slug"/>
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Category</label>
+                            <select name="sub_category" class="form-control">
+                                {% for category in categories %}
+                                    <optgroup  label={{ category.category.title }}>
+                                    {% for sub_cat in category.sub_category   %}
+                                        <option value="{{ sub_cat.id }}">{{ sub_cat.title }}</option>
+                                    {% endfor %}
+                                     </optgroup>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row"> 
+                        <div class="col-lg-6">
+                            <label>Max Price</label>
+                            <input class="form-control" name="max_price" placeholder="Max Price"  />
+                        </div>
+                        <div class="col-lg-6">
+                            <label>Discount Price</label>
+                            <input class="form-control" name="discount_price" placeholder="Discount Price" />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row"> 
+                        <div class="col-lg-12">
+                            <label>Product Long Description</label>
+                            <textarea class="form-control" name="product_long_description" id="long_desc"></textarea>
+                        </div>
+                    </div>
+                    <br> 
+                    <div class="row"> 
+                        <div class="col-lg-12">
+                            <label>Product Description</label>
+                            <textarea class="form-control" name="product_description" id="desc"></textarea>
+                        </div>
+                    </div>
+                    
+                    <br>  
+                    <div class="row"> 
+                        <div class="col-lg-6">
+                            <label>In Stock Total</label>
+                            <input class="form-control" name="in_stock_total" placeholder="In Stock Total" />
+                        </div>
+                    </div>
+                    <br> 
+                    <div class="row"> 
+                        <div class="col-lg-6">
+                            <label for="" class="form-label">Product Image</label>
+                            <input type="file" class="form-control" name="image" placeholder="Product Image" />
+                        </div>
+                    </div>
+                    
+
+                    
+                    <br>  
+                        <h5>Product Tags</h5>
+                    <hr>
+                    <div class="row">
+                        <div class="col-lg-12">
+                                <input type="text" name="product_tags"  data-role="tagsinput"  />
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class='progress mb-3' style="height:auto">
+                                <div class="progress-bar bg-warning" id="progressbar" role="progressbar" data-width="0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="display:none;width: 0%;height: 30px;border-radius: 10px;">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <br>
+
+                    <div class="row">
+                        <button type="button" class="btn btn-primary btn-block submit_btn">ADD PRODUCTS</button>
+                    </div>
+
+                 </div>
+                 </form>
+            </div>
+    </div>
+</div>
+{% endblock page_content %}
+
+
+{% block custom_js %}
+<script src="//cdn.tiny.cloud/1/u6oa5pnpaa1vxho1md7uk4zmq2ai7xuf5o5wfgyrc131vpj6/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+  tinymce.init({
+        selector: "textarea#long_desc",
+        height: 300,
+        plugins: [
+            "advlist autolink link image lists charmap print preview hr anchor pagebreak spellchecker",
+            "searchreplace wordcount visualblocks visualchars code fullscreen insertdatetime nonbreaking",
+            "save table contextmenu directionality emoticons template paste textcolor",
+        ],
+        
+        toolbar: "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | l      ink image | print preview media fullpage | forecolor backcolor emoticons",
+        style_formats: [
+            { title: "Bold text", inline: "b" },
+            { title: "Red text", inline: "span", styles: { color: "#ff0000" } },
+            { title: "Red header", block: "h1", styles: { color: "#ff0000" } },
+            { title: "Example 1", inline: "span", classes: "example1" },
+            { title: "Example 2", inline: "span", classes: "example2" },
+            { title: "Table styles" },
+            { title: "Table row 1", selector: "tr", classes: "tablerow1" },
+        ],
+        automatic_uploads: true,
+        file_picker_types: 'image',
+        file_picker_callback: function (cb, value, meta) {
+        var input = document.createElement('input');
+        input.setAttribute('type', 'file');
+        input.setAttribute('accept', 'image/*');
+
+
+        input.onchange = function () {
+        var file = this.files[0];
+
+        var reader = new FileReader();
+        reader.onload = function () {
+            
+            var id = 'blobid' + (new Date()).getTime();
+            var blobCache =  tinymce.activeEditor.editorUpload.blobCache;
+            var base64 = reader.result.split(',')[1];
+            var blobInfo = blobCache.create(id, file, base64);
+            blobCache.add(blobInfo);
+
+            cb(blobInfo.blobUri(), { title: file.name });
+        };
+        reader.readAsDataURL(file);
+        };
+
+        input.click();
+    },
+});
+</script>
+<script>
+    $(".submit_btn").click(function(){
+        var form=new FormData($("#myform")[0]);
+        form.append("long_desc",tinyMCE.activeEditor.getContent());
+
+        //AJAX CODE
+        var xhr=new XMLHttpRequest();
+        xhr.onreadystatechange=function(){
+            if(xhr.status==200){
+                console.log(xhr.responseText);
+            }
+        }
+        xhr.open("POST","{% url 'product_view' %}",true);
+        $("#progressbar").show();
+
+        //UPDATING PROGRESS BAR
+        xhr.upload.addEventListener("progress",function(ev){
+            if(ev.lengthComputable){
+                var percentage=(ev.loaded/ev.total*100|0);
+                $("#progressbar").css({"width":""+percentage+"%"}).text("Uploading .."+percentage+"%");
+                console.log(percentage);
+            }
+        });
+
+        xhr.send(form);
+    })
+
+</script>
+<script src="//bootstrap-tagsinput.github.io/bootstrap-tagsinput/dist/bootstrap-tagsinput.min.js"></script>
+{% endblock custom_js %}

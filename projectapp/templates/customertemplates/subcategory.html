@@ -1,0 +1,19 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+	<div class="row">
+        <h3>Sub Categories</h3>
+		{% for cat in subcategory %}
+		<div class="col-lg-4">
+            <a href="{% url 'product_details' cat.pk %}">
+			    <img class="thumbnail" src="{{cat.thumbnail.url}}">
+            </a>
+			<div class="box-element product">
+				<h6><strong>{{cat.title}}</strong></h6>
+                <h6><strong>{{cat.description}}</strong></h6>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+
+{% endblock content %}

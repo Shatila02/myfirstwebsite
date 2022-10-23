@@ -1,0 +1,9 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+{% for x in writeup %}
+<div class="container">    
+    <p style="color:white; text-align:justify;">{{x}}</p>
+</div>
+{% endfor %}
+{% endblock content %}

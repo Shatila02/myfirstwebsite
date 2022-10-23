@@ -1,0 +1,23 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+{% if request.user.is_authenticated and request.user.is_customer %}
+	<div class="row">
+        <h3>Categories</h3>
+		{% for cat in category %}
+		<div class="col-lg-4">
+            <a href="{% url 'subcategory' cat.pk %}">
+			    <img class="thumbnail" src="{{cat.thumbnail.url}}">
+            </a>
+			<div class="box-element product">
+				<h6><strong>{{cat.title}}</strong></h6>
+                <h6><strong>{{cat.description}}</strong></h6>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+{% else %}
+<a href="{% url 'customer_login' %}"></a>
+{% endif %}
+
+{% endblock content %}
