@@ -86,16 +86,17 @@ SITE_ID=1
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sqldb',
-        'USER': 'root',
-        'PASSWORD': 'sqladmin01',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'reward_database',
+        'USER': 'postgres',
+        'PASSWORD': 'ReVerSe@05',
         'HOST': 'localhost',
-        'PORT': '3306'
+        'PORT': '5432'
     }
 }
 
-
+db_from_env = dj_database_url.config(conn_max_age=600)
+DATABASES['default'.update(db_from_env)]
 AUTHENTICATION_BACKENDS = [
     
     # Needed to login by username in Django admin, regardless of `allauth`
