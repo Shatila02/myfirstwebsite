@@ -16,8 +16,8 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
-    phone_number = models.CharField(max_length=20)
-    address = models.CharField(max_length=20)
+    phone_number = models.CharField(max_length=12)
+    address = models.CharField(max_length=255)
     profile_pic=models.FileField(default="")
     created_at=models.DateTimeField(auto_now_add=True)
     def __str__(self):
