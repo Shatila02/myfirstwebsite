@@ -90,7 +90,7 @@ DATABASES = {
         'NAME': 'reward_database',
         'USER': 'postgres',
         'PASSWORD': 'ReVerSe@05',
-        'HOST': 'localhost',
+        'HOST': 'ec2-44-199-22-207.compute-1.amazonaws.com',
         'PORT': '5432'
     }
 }
