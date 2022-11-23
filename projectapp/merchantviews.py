@@ -13,6 +13,7 @@ from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 from .merchantforms import *
 from .decorators import merchant_required
+from django.http import JsonResponse
 
 
 class SignUpView(TemplateView):
@@ -165,7 +166,7 @@ class ProductView(View):
         product_long_description=request.POST.get("product_long_description")
         in_stock_total=request.POST.get("in_stock_total")
         product_tags=request.POST.get("product_tags")
-        image = request.POST.get("imageURL")
+        image = request.FILES['image']
         subcat_obj=SubCategories.objects.get(id=sub_category)
         product=Product(product_name=product_name,in_stock_total=in_stock_total,url_slug=url_slug,brand=brand,subcategories_id=subcat_obj,product_description=product_description,product_long_description=product_long_description,max_price=max_price,discount_price=discount_price, image=image)
         product.save()
@@ -175,6 +176,7 @@ class ProductView(View):
         for product_tag in product_tags_list:
             product_tag_obj=ProductTags(product_id=product,title=product_tag)
             product_tag_obj.save()
+        messages.success(request, 'Product added successfully')
         return HttpResponse("OK")
 
 @method_decorator([login_required, merchant_required], name='dispatch')
@@ -208,9 +210,63 @@ class ProductListView(ListView):
         return context
 
 @method_decorator([login_required, merchant_required], name='dispatch')
-class ProductUpdate(SuccessMessageMixin,UpdateView):
-    model=Product
-    success_message="Product Updated!"
-    fields="__all__"
-    template_name="merchanttemplates/product_update.html"
+class ProductEdit(View):
+
+    def get(self,request,*args,**kwargs):
+        product_id=kwargs["product_id"]
+        product=Product.objects.get(id=product_id)
+        product_tags=ProductTags.objects.filter(product_id=product_id)
+
+        categories=Category.objects.filter(is_active=1)
+        categories_list=[]
+        for category in categories:
+            sub_category=SubCategories.objects.filter(is_active=1,category_id=category.id)
+            categories_list.append({"category":category,"sub_category":sub_category})
+
+        return render(request,"merchanttemplates/product_edit.html",{"categories":categories_list,"product":product,"product_tags":product_tags})
+
+    def post(self,request,*args,**kwargs):
+        product_name=request.POST.get("product_name")
+        brand=request.POST.get("brand")
+        url_slug=request.POST.get("url_slug")
+        sub_category=request.POST.get("sub_category")
+        max_price=request.POST.get("max_price")
+        discount_price=request.POST.get("discount_price")
+        in_stock_total=request.POST.get("in_stock_total")
+        product_description=request.POST.get("product_description")
+        product_tags=request.POST.get("product_tags")
+        product_long_description=request.POST.get("product_long_description")
+        image = request.FILES['image']
+        subcat_obj=SubCategories.objects.get(id=sub_category)
+        product_id=kwargs["product_id"]
+        product=Product.objects.get(id=product_id)
+        product.product_name=product_name
+        product.image = image
+        product.url_slug=url_slug
+        product.brand=brand
+        product.subcategories_id=subcat_obj
+        product.product_description=product_description
+        product.max_price=max_price
+        product.discount_price= discount_price
+        product.in_stock_total=in_stock_total
+        product.product_long_description=product_long_description
+        product.save()
+
+        ProductTags.objects.filter(product_id=product_id).delete()
+
+        product_tags_list=product_tags.split(",")
+
+        for product_tag in product_tags_list:
+            product_tag_obj=ProductTags(product_id=product,title=product_tag)
+            product_tag_obj.save()
+        messages.success(request, 'Product updated successfully')
+        
+        return HttpResponse("OK")
+
+@csrf_exempt
+def Delete(request, pk):
+    productremove = Product.objects.get(id=pk)
+    productremove.delete()
+    return redirect('product_list')
+
 

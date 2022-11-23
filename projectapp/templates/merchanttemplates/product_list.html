@@ -10,7 +10,7 @@ Product List
 {% block page_title %}
 Product List
 {% endblock page_title %}
-
+{% csrf_token %}
 {% block page_content %}
 <div class="row">
     <div class="col-lg-12">
@@ -60,12 +60,15 @@ Product List
         <p><span class="badge badge-warning">Url Slug : {{ product.url_slug }}</span></p>
         <div class="article-cta">
             <label class="custom-switch mt-2" style="float:left">
-                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" {% if product.product.is_active == 1 %}checked{% endif %}>
+                        <input type="checkbox" name="custom-switch-checkbox" class="custom-switch-input" {% if product.is_active == 1 %}checked{% endif %}>
                         <span class="custom-switch-indicator"></span>
                         <span class="custom-switch-description">ACTIVE</span>
             </label>
-            <a href="#" class="btn btn-warning ">EDIT <i class="fas fa-chevron-right"></i></a>
+            <a href="{% url 'product_edit' product_id=product.id %}" class="btn btn-warning ">EDIT <i class="fas fa-chevron-right"></i></a>
             <div><br></div>
+        </div>
+        <div class="row">
+            <button type="button" class="btn btn-danger"><a href="{% url 'remove_product' product.id %}">DELETE</a></button>
         </div>
         </div>
     </article>
@@ -104,4 +107,30 @@ Product List
 
 
 {% block custom_js %}
+<script>
+    $(document).ready(function(){
+        $('.remove_product').click(function(e){
+        e.preventDefault();
+    
+        var product_id=$(this).data('product');
+        console.log(product_id)
+        var token = $('input[name=csrfmiddlewaretoken]').val();
+        // Ajax
+        $.ajax({
+            method:"POST",
+            url:"/remove_product",
+            data:{
+                'product_id': product_id,
+                csrfmiddlewaretoken: token,
+            },
+            dataType:'json',
+            success:function(res){
+                alertify.success(res.status)
+                window.location.reload();
+            }
+                
+        });
+    });
+});
+</script>
 {% endblock custom_js %}

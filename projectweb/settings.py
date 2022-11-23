@@ -29,7 +29,7 @@ SECRET_KEY = 'django-insecure-(*n-v)d_=m=1pgp$!31b6@=)@uc0o_ja*a9ic)pmq3^=wk_g+x
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost']
 
 
 # Application definition
@@ -41,12 +41,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'projectapp.apps.ProjectappConfig',
     'django.contrib.sites',
+    'projectapp.apps.ProjectappConfig',
+    'django_extensions',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'allauth.socialaccount.providers.facebook',
 ]
 
 MIDDLEWARE = [
@@ -65,7 +67,7 @@ ROOT_URLCONF = 'projectweb.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,7 +82,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'projectweb.wsgi.application'
 SITE_ID=1
-
+LOGIN_REDIRECT_URL = '/'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
@@ -90,11 +92,11 @@ DATABASES = {
         'NAME': 'reward_database',
         'USER': 'postgres',
         'PASSWORD': 'ReVerSe@05',
-        'HOST': 'ec2-44-199-22-207.compute-1.amazonaws.com',
+        'HOST': 'localhost',
         'PORT': '5432'
     }
 }
-
+#'HOST': 'ec2-44-199-22-207.compute-1.amazonaws.com'
 db_from_env = dj_database_url.config(conn_max_age=600)
 DATABASES['default'].update(db_from_env)
 
@@ -106,6 +108,7 @@ AUTHENTICATION_BACKENDS = [
 
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
+    
     
 ]
 
@@ -127,6 +130,19 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
+
+SOCIALACCOUNT_LOGIN_ON_GET=True
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.1/topics/i18n/
@@ -161,3 +177,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'static/images')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 django_heroku.settings(locals())
+
+
+
+#291488622530-l9iehf9s1vbs028hblkmkin56n5t0m62.apps.googleusercontent.com
+#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

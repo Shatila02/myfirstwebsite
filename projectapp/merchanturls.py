@@ -28,6 +28,7 @@ urlpatterns = [
     #Products
     path('product_create',merchantviews.ProductView.as_view(),name="product_view"),
     path('product_list',merchantviews.ProductListView.as_view(),name="product_list"),
-    path('product_update/<str:product_id>',merchantviews.ProductUpdate.as_view(),name="product_edit"),
+    path('product_edit/<str:product_id>',merchantviews.ProductEdit.as_view(),name="product_edit"),
+    path('remove_product/<slug:pk>',merchantviews.Delete,name="remove_product"),
 
 ]

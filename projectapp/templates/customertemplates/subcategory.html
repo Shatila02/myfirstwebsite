@@ -5,7 +5,7 @@
         <h3>Sub Categories</h3>
 		{% for cat in subcategory %}
 		<div class="col-lg-4">
-            <a href="{% url 'product_details' cat.pk %}">
+            <a href="{% url 'subcategory_product' cat.pk %}">
 			    <img class="thumbnail" src="{{cat.thumbnail.url}}">
             </a>
 			<div class="box-element product">

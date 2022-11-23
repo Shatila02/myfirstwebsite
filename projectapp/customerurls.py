@@ -21,6 +21,7 @@ urlpatterns = [
 	path('view_orders/<str:t_no>', customerviews.orderview, name = "orderview"),
 	path('category', customerviews.category, name = "category"),
 	path('subcategory/<int:pk>/', customerviews.subcategory, name = "subcategory"),
+	path('subcategory_product/<int:pk>/', customerviews.subcategory_product, name = "subcategory_product"),
 	path('about/', customerviews.about, name='about'),
 	path('terms&policy/', customerviews.term, name='term'),
 	path('contact/', customerviews.contact, name='contact'),

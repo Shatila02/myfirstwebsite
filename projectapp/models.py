@@ -1,7 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.urls import reverse
-
+from django.contrib.auth.models import User
 # Create your models here.
 class CustomUser(AbstractUser):
     is_customer = models.BooleanField(default=False)
@@ -9,6 +9,7 @@ class CustomUser(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
+    
 
 class Customer(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name = 'customer', null=True, blank=True)
@@ -16,7 +17,7 @@ class Customer(models.Model):
     last_name = models.CharField(max_length=255)
     username = models.CharField(max_length=255)
     email = models.EmailField(max_length=255)
-    phone_number = models.CharField(max_length=12)
+    phone_number = models.CharField(max_length=255)
     address = models.CharField(max_length=255)
     profile_pic=models.FileField(default="")
     created_at=models.DateTimeField(auto_now_add=True)
@@ -25,14 +26,15 @@ class Customer(models.Model):
 
 
 class Merchant(models.Model):
-    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE, primary_key = True)
+    user = models.OneToOneField(CustomUser, on_delete = models.CASCADE, related_name = 'merchant', primary_key = True)
     username = models.CharField(max_length=255)
-    CEO = models.CharField(max_length=20)
     phone_number = models.CharField(max_length=20)
     email = models.EmailField(max_length=255)
     company_name = models.CharField(max_length=20)
     company_liscence = models.CharField(max_length=20)
     company_location = models.CharField(max_length=20)
+    def __str__(self):
+        return self.username
 
 class Category(models.Model):
     id=models.AutoField(primary_key=True)
@@ -63,6 +65,9 @@ class SubCategories(models.Model):
     def get_absolute_url(self):
         return reverse("sub_category_list")
 
+    def __str__(self):
+        return self.title
+
 
 
 class Product(models.Model):
@@ -78,7 +83,7 @@ class Product(models.Model):
 	in_stock_total=models.IntegerField(default=1)
 	digital = models.BooleanField(default=False,null=True, blank=True)
 	image = models.ImageField(null=True, blank=True)
-	is_published = models.BooleanField(default=True)
+	is_active = models.BooleanField(default=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	def __str__(self):
 		return self.product_name

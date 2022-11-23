@@ -55,11 +55,19 @@ def cartData(request):
 
 	return {'cartItems':cartItems ,'order':order, 'items':items}
 
-	
+
+
+"""if request.user.is_customer == False:
+			user = request.user
+			user.is_customer = True
+			user.save()
+			customer = Customer(username = user.username, email = user.email)
+			customer.save()
+		else:
+			customer = request.user.customer"""
 def guestOrder(request, data):
 	name = data['form']['name']
 	email = data['form']['email']
-
 	cookieData = cookieCart(request)
 	items = cookieData['items']
 

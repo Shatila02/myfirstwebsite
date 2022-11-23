@@ -4,6 +4,7 @@
 <div class="box-element wishdata">
     {% csrf_token %}
     {% for item in wishlist %}
+    {% if request.user.is_customer %}
     <div class="col-md-12">
         <div class="cart-row">
             <div style="flex:2"><img class="row-image" src="{{item.product.imageURL}}"></div>
@@ -17,11 +18,12 @@
             <div class="col=md-2 my auto">
                 <button style="width:140px;height:38px;font-size:14px;" data-product="{{item.product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart"><i class='fa fa-shopping-cart yellow-color'></i>  Add to Cart</button>
             </div>
-            <div class="col=md-2 my auto">
+            <div class="col=md-2">
                 <button style="width:120px;height:38px;font-size:14px;" data-product="{{item.product.id}}" data-action="delete" class="btn btn-danger delete-wishlist-item"><i class="fa fa-trash"></i> Remove</button>
             </div>
         </div>
     </div>
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock %}

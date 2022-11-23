@@ -36,4 +36,3 @@ class CustomerSignUpForm(UserCreationForm):
         customer.address=self.cleaned_data.get('address')
         customer.save()
         return user
-

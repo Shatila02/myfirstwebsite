@@ -1,0 +1,27 @@
+{% extends 'customertemplates/main.html' %}
+{% load static %}
+{% block content %}
+    <div class="row">
+		{% for product in products %}
+		<div class="col-lg-4">
+            <a href="{% url 'product_details' product.pk %}">
+			    <img class="thumbnail" src="{{product.imageURL}}">
+            </a>
+			<div class="box-element product">
+				<h6><strong>{{product.product_name}}</strong></h6>
+				<h4 style="display: inline-block;"><strong>${{product.discount_price}}</strong></h4>
+				<hr>
+
+				<button data-product="{{product.id}}" data-action="add" class="btn btn-outline-secondary add-btn update-cart"><i class='fa fa-shopping-cart yellow-color'></i> Add to Cart</button>
+				{% if user.is_authenticated and user.is_customer %}
+				<button style="width:110px" class="btn btn-outline-secondary add-btn add-wishlist" data-product="{{product.id}}" data-action="add"><i class="fa fa-heart"></i> Wishlist</button>
+				{% endif %}
+				
+				<a class="btn btn-outline-success" href="{% url 'product_details' product.pk %}"><i class="fa fa-eye"></i> View</a>
+				
+
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+{% endblock content %}

@@ -13,7 +13,6 @@ from django.utils.decorators import method_decorator
 from .decorators import customer_required
 from django.conf import settings
 from django.urls import reverse
-from .decorators import customer_required
 
 def store(request):
 	data = cartData(request)
@@ -48,6 +47,15 @@ def subcategory(request, pk):
 	context = {'subcategory':subcategory , 'cartItems':cartItems}
 	return render(request, 'customertemplates/subcategory.html', context)
 
+def subcategory_product(request, pk):
+	data = cartData(request)
+
+	cartItems = data['cartItems']
+	subcategory = SubCategories.objects.get(id=pk)
+	products = Product.objects.filter(subcategories_id=subcategory)
+	context = {'products':products , 'cartItems':cartItems}
+	return render(request, 'customertemplates/subcategory_products.html', context)
+
 
 def cart(request):
 	data = cartData(request)
@@ -76,7 +84,6 @@ def updateItem(request):
 	action = data['action']
 	print('Action:', action)
 	print('Product:', productId)
-
 	customer = request.user.customer
 	product = Product.objects.get(id=productId)
 	order, created = Order.objects.get_or_create(customer=customer, complete=False)
@@ -99,11 +106,12 @@ def processOrder(request):
 	transaction_id = datetime.datetime.now().timestamp()
 	data = json.loads(request.body)
 
-	if request.user.is_authenticated:
+	if request.user.is_customer:
 		customer = request.user.customer
 		order, created = Order.objects.get_or_create(customer=customer, complete=False)
 	else:
 		customer, order = guestOrder(request, data)
+		
 
 	total = float(data['form']['total'])
 	order.transaction_id = transaction_id
@@ -134,13 +142,14 @@ def loginCustomer(request):
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        if user is not None and user.is_customer == True:
+        if user is not None:
             login(request, user)
             return redirect('store')
+		
         else:
             messages.warning(request, "Invalid Credentials")
             return redirect('customer_login')
-    return render(request, 'customertemplates/login.html', {'page': page})
+    return render(request, 'account/login.html', {'page': page})
 
 @csrf_exempt
 def logoutCustomer(request):
@@ -206,7 +215,7 @@ def addwishlist(request):
 
 def deletewishlist(request):
 	if request.method =="POST":
-		if request.user.is_authenticated:
+		if request.user.is_authenticated and request.user.is_customer:
 			prod_id = int(request.POST.get('product_id'))
 			if(WishList.objects.filter(user=request.user.customer, product_id=prod_id)):
 				wishlistitem = WishList.objects.get(product_id=prod_id)
@@ -253,3 +262,5 @@ def contact(request):
 	writeup = Contact.objects.all()
 	context = {'writeup':writeup, 'cartItems': cartItems,}
 	return render(request, 'customertemplates/contact_us.html', context)
+
+

@@ -21,6 +21,7 @@ from projectapp import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
     path('', include('projectapp.customerurls')),
     path('', include('projectapp.merchanturls')),
     path('register_decision/', views.register_decision, name="register_decision"),
